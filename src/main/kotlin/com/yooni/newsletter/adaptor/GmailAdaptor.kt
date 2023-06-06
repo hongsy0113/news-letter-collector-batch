@@ -85,6 +85,28 @@ class GmailAdaptor(
             throw e
         }
     }
+
+    fun callModifyMailAPI(mailId: String, requestDto: ModifyMailRequestDto, accessToken: String): ModifyMailResponseDto {
+        try {
+            val headers = HttpHeaders()
+            headers.set("Authorization", "Bearer $accessToken")
+            val requestEntity = HttpEntity<ModifyMailRequestDto>(requestDto, headers)
+
+            val response: ResponseEntity<ModifyMailResponseDto> =
+                restTemplate.exchange(
+                    "$gmailApiHost/gmail/v1/users/$userId/messages/$mailId/modify",
+                    HttpMethod.POST,
+                    requestEntity,
+                    ModifyMailResponseDto::class.java,
+                    null
+                )
+            println(response)
+            return response.body ?: ModifyMailResponseDto()
+        } catch (e: Exception) {
+            println(e)
+            throw e
+        }
+    }
 }
 
 data class GetMailListResponseDto(
@@ -123,3 +145,23 @@ data class GetMailResponseDto(
         )
     }
 }
+
+//{
+//  "addLabelIds": [
+//    string
+//  ],
+//  "removeLabelIds": [
+//    string
+//  ]
+//}
+
+data class ModifyMailRequestDto(
+    val addLabelIds: List<String> = emptyList(),
+    val removeLabelIds: List<String> = emptyList(),
+)
+
+data class ModifyMailResponseDto(
+    val id: String? = null,
+    val threadId: String? = null,
+    val labelIds: List<String> = emptyList(),
+)
