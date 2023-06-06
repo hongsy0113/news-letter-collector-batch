@@ -25,6 +25,19 @@ class GmailAdaptorTest @Autowired constructor(
     }
 
     @Test
+    fun `특정 라벨을 가진 메일 리스트만 조회한다`() {
+        // given
+        val labelIds = listOf("Label_5055091156381294150")
+
+        // when
+        val actual = gmailAdaptor.callGetMailListAPI(labelIds = labelIds)
+
+        // then
+        actual shouldNotBe null
+        println(actual)
+    }
+
+    @Test
     fun `메일 단건 조회 API를 호출한다`() {
         // given
         val accessToken = "ya29.a0AWY7CkmzhnOvN4hbhXWmwF4zm_EC0DVwds0efoMl_3e63Pb1D5jwaoBgb7erHaxygAirg9gdvU2QgzZcBnEohWV5ijq8abV6becekd9m8HbvCOO5NhUURFXNVYi2wU-wcX55lSxFM2ORup9-dGY52V_I-qtWaCgYKAYwSARISFQG1tDrpMqbd624BRObOeNH1KGsDDQ0163"

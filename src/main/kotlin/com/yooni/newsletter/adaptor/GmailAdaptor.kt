@@ -7,8 +7,11 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
-import java.lang.Exception
+import org.springframework.web.util.UriComponentsBuilder
+
 
 @Component
 class GmailAdaptor(
@@ -47,13 +50,19 @@ class GmailAdaptor(
     private val authorizationHeader: HttpHeaders
         get() = HttpHeaders().also { it.set("Authorization", "Bearer $accessToken") }
 
-    fun callGetMailListAPI(): GetMailListResponseDto {
+    fun callGetMailListAPI(labelIds: List<String> = emptyList()): GetMailListResponseDto {
         try {
             val requestEntity = HttpEntity<String>(authorizationHeader)
 
+            val url = UriComponentsBuilder
+                .fromHttpUrl("$gmailApiHost/gmail/v1/users/$userId/messages")
+                .labelIdQueryParams(labelIds)
+                .build()
+                .toString()
+
             val response: ResponseEntity<GetMailListResponseDto> =
                 restTemplate.exchange(
-                    "$gmailApiHost/gmail/v1/users/$userId/messages",
+                    url,
                     HttpMethod.GET,
                     requestEntity,
                     GetMailListResponseDto::class.java,
@@ -102,6 +111,13 @@ class GmailAdaptor(
             println(e)
             throw e
         }
+    }
+
+    private fun UriComponentsBuilder.labelIdQueryParams(labelIds: List<String>): UriComponentsBuilder {
+        for (labelId in labelIds) {
+            this.queryParam("labelIds", labelId)
+        }
+        return this
     }
 }
 
