@@ -1,0 +1,8 @@
+
+
+gmail:
+  domain:
+    gmail-auth: https://accounts.google.com
+    gmail-api: https://gmail.googleapis.com
+  client-id: 806487491033-43nlnqg49q9rsetnv69jhi8o2qnjbcl5.apps.googleusercontent.com
+  user-id: newslettercollector77@gmail.com
