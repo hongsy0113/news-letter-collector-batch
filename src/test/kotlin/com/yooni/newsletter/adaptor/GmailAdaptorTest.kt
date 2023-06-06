@@ -15,10 +15,9 @@ class GmailAdaptorTest @Autowired constructor(
     @Test
     fun `메일 리스트 조회 API를 호출한다`() {
         // given
-        val accessToken = "ya29.a0AWY7CkmzhnOvN4hbhXWmwF4zm_EC0DVwds0efoMl_3e63Pb1D5jwaoBgb7erHaxygAirg9gdvU2QgzZcBnEohWV5ijq8abV6becekd9m8HbvCOO5NhUURFXNVYi2wU-wcX55lSxFM2ORup9-dGY52V_I-qtWaCgYKAYwSARISFQG1tDrpMqbd624BRObOeNH1KGsDDQ0163"
 
         // when
-        val actual = gmailAdaptor.callGetMailListAPI(accessToken = accessToken)
+        val actual = gmailAdaptor.callGetMailListAPI()
 
         // then
         actual shouldNotBe null
@@ -32,7 +31,7 @@ class GmailAdaptorTest @Autowired constructor(
         val mailId = "1888497ada8cd377"
 
         // when
-        val actual = gmailAdaptor.callGetMailAPI(mailId = mailId, accessToken = accessToken)
+        val actual = gmailAdaptor.callGetMailAPI(mailId = mailId)
 
         // then
         actual shouldNotBe null
@@ -51,7 +50,7 @@ class GmailAdaptorTest @Autowired constructor(
         )
 
         // when
-        val actual = gmailAdaptor.callModifyMailAPI(mailId = mailId, requestDto = requestDto, accessToken = accessToken)
+        val actual = gmailAdaptor.callModifyMailAPI(mailId = mailId, requestDto = requestDto)
 
         // then
         actual shouldNotBe null

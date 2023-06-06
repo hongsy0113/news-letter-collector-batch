@@ -22,6 +22,8 @@ class GmailAdaptor(
     private val clientId: String,
     @Value("\${gmail.user-id}")
     private val userId: String,
+    @Value("\${gmail.access-token}")
+    private val accessToken: String,
 ) {
 //    fun callTest() {
 //        try {
@@ -42,11 +44,12 @@ class GmailAdaptor(
 //        }
 //    }
 
-    fun callGetMailListAPI(accessToken: String): GetMailListResponseDto {
+    private val authorizationHeader: HttpHeaders
+        get() = HttpHeaders().also { it.set("Authorization", "Bearer $accessToken") }
+
+    fun callGetMailListAPI(): GetMailListResponseDto {
         try {
-            val headers = HttpHeaders()
-            headers.set("Authorization", "Bearer $accessToken")
-            val requestEntity = HttpEntity<String>(headers)
+            val requestEntity = HttpEntity<String>(authorizationHeader)
 
             val response: ResponseEntity<GetMailListResponseDto> =
                 restTemplate.exchange(
@@ -56,7 +59,6 @@ class GmailAdaptor(
                     GetMailListResponseDto::class.java,
                     null
                 )
-            println(response)
             return response.body ?: GetMailListResponseDto()
         } catch (e: Exception) {
             println(e)
@@ -64,11 +66,9 @@ class GmailAdaptor(
         }
     }
 
-    fun callGetMailAPI(mailId: String, accessToken: String): GetMailResponseDto {
+    fun callGetMailAPI(mailId: String): GetMailResponseDto {
         try {
-            val headers = HttpHeaders()
-            headers.set("Authorization", "Bearer $accessToken")
-            val requestEntity = HttpEntity<String>(headers)
+            val requestEntity = HttpEntity<String>(authorizationHeader)
 
             val response: ResponseEntity<GetMailResponseDto> =
                 restTemplate.exchange(
@@ -78,7 +78,6 @@ class GmailAdaptor(
                     GetMailResponseDto::class.java,
                     null
                 )
-            println(response)
             return response.body ?: GetMailResponseDto()
         } catch (e: Exception) {
             println(e)
@@ -86,11 +85,9 @@ class GmailAdaptor(
         }
     }
 
-    fun callModifyMailAPI(mailId: String, requestDto: ModifyMailRequestDto, accessToken: String): ModifyMailResponseDto {
+    fun callModifyMailAPI(mailId: String, requestDto: ModifyMailRequestDto): ModifyMailResponseDto {
         try {
-            val headers = HttpHeaders()
-            headers.set("Authorization", "Bearer $accessToken")
-            val requestEntity = HttpEntity<ModifyMailRequestDto>(requestDto, headers)
+            val requestEntity = HttpEntity<ModifyMailRequestDto>(requestDto, authorizationHeader)
 
             val response: ResponseEntity<ModifyMailResponseDto> =
                 restTemplate.exchange(
@@ -100,7 +97,6 @@ class GmailAdaptor(
                     ModifyMailResponseDto::class.java,
                     null
                 )
-            println(response)
             return response.body ?: ModifyMailResponseDto()
         } catch (e: Exception) {
             println(e)
@@ -145,15 +141,6 @@ data class GetMailResponseDto(
         )
     }
 }
-
-//{
-//  "addLabelIds": [
-//    string
-//  ],
-//  "removeLabelIds": [
-//    string
-//  ]
-//}
 
 data class ModifyMailRequestDto(
     val addLabelIds: List<String> = emptyList(),
