@@ -20,9 +20,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.kafka:spring-kafka")
-	implementation("org.apache.httpcomponents:httpclient:4.5.10")
+	implementation("org.apache.httpcomponents:httpclient:4.5.13")
 
-	// loggin
+	// logging
 	implementation("io.github.microutils:kotlin-logging:1.7.4")
 	implementation("com.getsentry.raven:raven-logback:8.0.3")
 	implementation("io.sentry:sentry-spring-boot-starter:5.6.1")

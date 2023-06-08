@@ -5,7 +5,6 @@ import com.yooni.newsletter.adaptor.ModifyMailRequestDto
 import com.yooni.newsletter.helper.Base64Helper
 import com.yooni.newsletter.type.MailType
 import org.springframework.stereotype.Service
-
 @Service
 class MailService(
     private val mailAdaptor: GmailAdaptor,
@@ -31,6 +30,14 @@ class MailService(
         }
     }
 
+    fun completeMail(mailId: String) {
+        modifyMailLabel(
+            mailId = mailId,
+            addLabelIds = listOf(MailType.COMPLETED.labelId),
+            removeLabelIds = listOf(MailType.NOT_PROCESSED.labelId)
+        )
+    }
+
     fun modifyMailLabel(
         mailId: String,
         addLabelIds: List<String> = emptyList(),
@@ -51,4 +58,5 @@ class MailService(
         return MailType.NOT_NEWS_LETTER
     }
 }
+
 

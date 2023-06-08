@@ -6,4 +6,11 @@ gmail:
     gmail-api: https://gmail.googleapis.com
   client-id: 806487491033-43nlnqg49q9rsetnv69jhi8o2qnjbcl5.apps.googleusercontent.com
   user-id: newslettercollector77@gmail.com
-  access-token: "ya29.a0AWY7CkkCn6kaYGxVtozSBlC7FVy_zbxh5MU0obwibvfDfCf15PNaL6xACAbB0HAwqTYsT-j3p708bV9sdLK3HfvmuRF3JfEt3OJoNT3-lt9IGOdKlSYR-Y7aXdHigRzhrGo4IwmLSbbreZfmsWOYh5beM6i6aCgYKAeUSARISFQG1tDrp2mOMrkUCI4keppV_YwPoHw0163"
+  access-token: "ya29.a0AWY7CkkYl6AJAv9t5VVvOL9rQOPhLTiWQCfRY9bGlnQxETfJVb2wmR7eewajkDovKi5FFCPebiiQv5BIgOvYNsHwKUAoFHtzVGlXOc_RrySiESw5bUd_pcMYvA-_o8-7Xs2Vo8j77Xk_kfna7tC0CwCUc6b9aCgYKAZYSARISFQG1tDrpXx0LnanNSjjXEkKaWYMJTQ0163"
+
+server:
+  port: 8090
+spring:
+  batch:
+    job:
+      names: fetchAndSaveNewsLetterJob
