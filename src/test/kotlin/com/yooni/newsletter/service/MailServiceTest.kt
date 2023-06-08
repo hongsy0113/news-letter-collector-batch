@@ -1,5 +1,6 @@
 package com.yooni.newsletter.service
 
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,5 +46,19 @@ class MailServiceTest @Autowired constructor(
         // then
         actual shouldNotBe null
         println(actual)
+    }
+
+    @Test
+    fun `메일 종류와 함께 메일 타입을 조회한다`() {
+        // given
+        val mailId = "18897d2bc55101ca"
+
+        // when
+        val (mailType, mailContent) = mailService.getMailTypeAndContent(mailId)
+
+        // then
+        mailType.isNewsLetter() shouldBe true
+        println(mailType)
+        println(mailContent)
     }
 }
