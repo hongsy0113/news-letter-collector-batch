@@ -94,6 +94,25 @@ class GmailAdaptor(
         }
     }
 
+    fun callGetMailLabelIdsAPI(mailId: String): GetMailLabelIdsResponseDto {
+        try {
+            val requestEntity = HttpEntity<String>(authorizationHeader)
+
+            val response: ResponseEntity<GetMailLabelIdsResponseDto> =
+                restTemplate.exchange(
+                    "$gmailApiHost/gmail/v1/users/$userId/messages/$mailId?format=${GetMailAPIFormat.MINIMAL}",
+                    HttpMethod.GET,
+                    requestEntity,
+                    GetMailLabelIdsResponseDto::class.java,
+                    null
+                )
+            return response.body ?: GetMailLabelIdsResponseDto(mailId)
+        } catch (e: Exception) {
+            println(e)
+            throw e
+        }
+    }
+
     fun callModifyMailAPI(mailId: String, requestDto: ModifyMailRequestDto): ModifyMailResponseDto {
         try {
             val requestEntity = HttpEntity<ModifyMailRequestDto>(requestDto, authorizationHeader)
@@ -158,6 +177,11 @@ data class GetMailResponseDto(
     }
 }
 
+data class GetMailLabelIdsResponseDto(
+    val id: String,
+    val labelIds: List<String> = emptyList()
+)
+
 data class ModifyMailRequestDto(
     val addLabelIds: List<String> = emptyList(),
     val removeLabelIds: List<String> = emptyList(),
@@ -168,3 +192,7 @@ data class ModifyMailResponseDto(
     val threadId: String? = null,
     val labelIds: List<String> = emptyList(),
 )
+
+enum class GetMailAPIFormat {
+    MINIMAL, FULL, RAW, METADATA
+}

@@ -1,6 +1,7 @@
 package com.yooni.newsletter.domain.entity
 
 import com.yooni.newsletter.domain.AuditEntity
+import com.yooni.newsletter.helper.generateExternalId
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.Column
@@ -23,4 +24,26 @@ data class NewsLetter(
     val mailSnippet: String,
     val uploadedDate: LocalDate,
     val receivedAt: LocalDateTime
-) : AuditEntity()
+) : AuditEntity() {
+
+    constructor(
+        newsLetterInfoExternalId: String,
+        mailId: String,
+        content: String,
+        mailTitle: String,
+        mailSnippet: String,
+        receivedAt: LocalDateTime
+    ) : this(
+        externalId = generateExternalId(ABBREVIATED_TABLE_NAME),
+        newsLetterInfoExternalId = newsLetterInfoExternalId,
+        mailId = mailId,
+        content = content,
+        mailTitle = mailTitle,
+        mailSnippet = mailSnippet,
+        uploadedDate = receivedAt.toLocalDate(),
+        receivedAt = receivedAt
+    )
+    companion object {
+        private const val ABBREVIATED_TABLE_NAME = "nla"
+    }
+}

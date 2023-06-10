@@ -51,6 +51,19 @@ class GmailAdaptorTest @Autowired constructor(
     }
 
     @Test
+    fun `메일의 메타데이터만 조회할 수 있다`() {
+        // given
+        val mailId = "1888497ada8cd377"
+
+        // when
+        val actual = gmailAdaptor.callGetMailLabelIdsAPI(mailId = mailId)
+
+        // then
+        actual shouldNotBe null
+        println(actual)
+    }
+
+    @Test
     fun `메일 수정 API를 호출한다`() {
         // given
         val mailId = "1888488daacc6723"

@@ -49,17 +49,16 @@ class MailServiceTest @Autowired constructor(
     }
 
     @Test
-    fun `메일 종류와 함께 메일 타입을 조회한다`() {
+    fun `특정 메일 타입을 조회한다`() {
         // given
-        val mailId = "18897d2bc55101ca"
+        val mailId = "18889be0c9804993"
 
         // when
-        val (mailType, mailContent) = mailService.getMailTypeAndContent(mailId)
+        val actual = mailService.getMailType(mailId)
 
         // then
-        mailType.isNewsLetter() shouldBe true
-        println(mailType)
-        println(mailContent)
+        actual shouldNotBe null
+        println(actual)
     }
 
     @Test

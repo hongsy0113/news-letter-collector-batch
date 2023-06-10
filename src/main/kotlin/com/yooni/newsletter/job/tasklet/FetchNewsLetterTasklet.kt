@@ -1,6 +1,7 @@
 package com.yooni.newsletter.job.tasklet
 
 import com.yooni.newsletter.service.MailService
+import com.yooni.newsletter.service.NewsLetterDataService
 import com.yooni.newsletter.type.MailType
 import org.springframework.batch.core.StepContribution
 import org.springframework.batch.core.scope.context.ChunkContext
@@ -11,23 +12,21 @@ import org.springframework.stereotype.Component
 @Component
 class FetchNewsLetterTasklet(
     private val mailService: MailService,
+    private val newsLetterDataService: NewsLetterDataService,
 ) : Tasklet {
     override fun execute(contribution: StepContribution, chunkContext: ChunkContext): RepeatStatus? {
-        val notProcessedMailIds = mailService.getMailList(
-            labelIds = listOf(MailType.NOT_PROCESSED.labelId)
-        ).messages.map { it.id }
+        val notProcessedMailIds = mailService.getNotProcessedMailIds()
 
         for (mailId in notProcessedMailIds) {
-            val (mailType, mailContent) = mailService.getMailTypeAndContent(mailId)
-
-            println(mailType)
+            val mailType = mailService.getMailType(mailId)
 
             if (mailType.isNewsLetter()) {
-                // TODO 데이터 처리
-                println(mailContent)
-            }
+                mailService.getNewsLetterMailData(mailId).let {
+                    newsLetterDataService.saveNewsLetter(it)
+                }
+                mailService.completeMail(mailId)
 
-            mailService.completeMail(mailId)
+            }
         }
 
         return RepeatStatus.FINISHED
