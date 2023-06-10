@@ -5,16 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class NewsLetterRepositoryTest @Autowired constructor(
-    private val newsLetterRepository: NewsLetterRepository
+class NewsLetterInfoRepositoryTest @Autowired constructor(
+    private val newsLetterInfoRepository: NewsLetterInfoRepository
 ) {
     @Test
     fun `newsletter entity를 조회한다`() {
         // given
-        val newsLetterId = 1L
+        val newsLetterInfoId = 1L
 
         // when
-        val actual = newsLetterRepository.findById(newsLetterId)
+        val actual = newsLetterInfoRepository.findById(newsLetterInfoId)
 
         // then
         println(actual)

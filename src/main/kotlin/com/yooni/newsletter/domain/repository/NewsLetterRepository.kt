@@ -5,5 +5,4 @@ import org.springframework.data.repository.CrudRepository
 
 interface NewsLetterRepository : CrudRepository<NewsLetter, Long> {
     fun findByExternalId(externalId: String): NewsLetter?
-    fun findByLabelId(labelId: String): NewsLetter?
 }
