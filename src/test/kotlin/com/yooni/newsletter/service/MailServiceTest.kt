@@ -61,4 +61,17 @@ class MailServiceTest @Autowired constructor(
         println(mailType)
         println(mailContent)
     }
+
+    @Test
+    fun `뉴스레터 저장에 필요한 정보를 조회한다`() {
+        // given
+        val mailId = "18897d2bc55101ca"
+
+        // when
+        val newsLetterMailData = mailService.getNewsLetterMailData(mailId)
+
+        // then
+        println(newsLetterMailData)
+
+    }
 }

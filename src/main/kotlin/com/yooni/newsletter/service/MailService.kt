@@ -3,8 +3,11 @@ package com.yooni.newsletter.service
 import com.yooni.newsletter.adaptor.GmailAdaptor
 import com.yooni.newsletter.adaptor.ModifyMailRequestDto
 import com.yooni.newsletter.helper.Base64Helper
+import com.yooni.newsletter.helper.convertToLocalDateTime
 import com.yooni.newsletter.type.MailType
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+
 @Service
 class MailService(
     private val mailAdaptor: GmailAdaptor,
@@ -29,6 +32,19 @@ class MailService(
             }
         }
     }
+
+    fun getNewsLetterMailData(mailId: String): NewsLetterMailData =
+        mailAdaptor.callGetMailAPI(mailId).let { responseDto ->
+            NewsLetterMailData(
+                newsLetterType = getMailTypeByLabelIds(responseDto.labelIds),
+                title = responseDto.payload?.headers?.find { it.name == "Subject" }?.value,
+                snippet = responseDto.snippet,
+                content = responseDto.payload?.body?.data?.let {
+                    base64Helper.decode(it)
+                },
+                receivedAt = responseDto.payload?.headers?.find { it.name == "Date" }?.value?.convertToLocalDateTime()
+            )
+        }
 
     fun completeMail(mailId: String) {
         modifyMailLabel(
@@ -58,5 +74,13 @@ class MailService(
         return MailType.NOT_NEWS_LETTER
     }
 }
+
+data class NewsLetterMailData(
+    val newsLetterType : MailType,
+    val title: String?,
+    val snippet: String?,
+    val content: String?,
+    val receivedAt: LocalDateTime?
+)
 
 
