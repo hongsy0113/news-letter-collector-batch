@@ -4,9 +4,6 @@ gmail:
   domain:
     gmail-auth: https://accounts.google.com
     gmail-api: https://gmail.googleapis.com
-  client-id: 806487491033-43nlnqg49q9rsetnv69jhi8o2qnjbcl5.apps.googleusercontent.com
-  user-id: newslettercollector77@gmail.com
-  access-token: "ya29.a0AWY7CkkYl6AJAv9t5VVvOL9rQOPhLTiWQCfRY9bGlnQxETfJVb2wmR7eewajkDovKi5FFCPebiiQv5BIgOvYNsHwKUAoFHtzVGlXOc_RrySiESw5bUd_pcMYvA-_o8-7Xs2Vo8j77Xk_kfna7tC0CwCUc6b9aCgYKAZYSARISFQG1tDrpXx0LnanNSjjXEkKaWYMJTQ0163"
 
 server:
   port: 8090
@@ -14,3 +11,12 @@ spring:
   batch:
     job:
       names: fetchAndSaveNewsLetterJob
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://newslettercollector-db.cto5vei4nbnz.ap-northeast-2.rds.amazonaws.com:3306/news_letter_collector"
+    username: admin
+
+
+  profiles:
+    include: secret
