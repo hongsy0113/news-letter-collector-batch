@@ -1,11 +1,11 @@
 package com.yooni.newsletter.service
 
-import com.yooni.newsletter.adaptor.GetMailResponseDto
 import com.yooni.newsletter.adaptor.GmailAdaptor
 import com.yooni.newsletter.adaptor.ModifyMailRequestDto
 import com.yooni.newsletter.helper.Base64Helper
 import com.yooni.newsletter.helper.convertToLocalDateTime
 import com.yooni.newsletter.type.MailType
+import com.yooni.newsletter.type.NewsLetterType
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -14,8 +14,8 @@ class MailService(
     private val mailAdaptor: GmailAdaptor,
     private val base64Helper: Base64Helper,
 ) {
-    fun getNotProcessedMailIds() =
-        getMailList(labelIds = listOf(MailType.NOT_PROCESSED.labelId))
+    fun getNotProcessedNewsLetterMailIds() =
+        getMailList(labelIds = listOf(MailType.NEWS_LETTER.labelId, MailType.NOT_PROCESSED.labelId))
             .messages.map { it.id }
 
     fun getMailList(labelIds: List<String> = emptyList()) =
@@ -26,16 +26,17 @@ class MailService(
             base64Helper.decode(it)
         }
 
-    fun getMailType(mailId: String) =
+    fun getNewsLetterType(mailId: String) =
         mailAdaptor.callGetMailLabelIdsAPI(mailId).let {
-            getMailTypeByLabelIds(it.labelIds)
+            getNewsLetterTypeByLabelIds(it.labelIds)
         }
+
 
     // TODO : responseDto 에서 의미있는 값 추출하는 로직 리팩토링
     fun getNewsLetterMailData(mailId: String): NewsLetterMailData =
         mailAdaptor.callGetMailAPI(mailId).let { responseDto ->
             NewsLetterMailData(
-                newsLetterType = getMailTypeByLabelIds(responseDto.labelIds),
+                newsLetterType = getNewsLetterTypeByLabelIds(responseDto.labelIds),
                 mailId = mailId,
                 title = responseDto.payload?.headers?.find { it.name == "Subject" }?.value,
                 snippet = responseDto.snippet,
@@ -65,18 +66,18 @@ class MailService(
             removeLabelIds = removeLabelIds
         ))
 
-    private fun getMailTypeByLabelIds(labelIds: List<String>): MailType {
-        MailType.NEWS_LETTER_LABEL.forEach {
-            if (it.labelId in labelIds) {
-                return it
+    private fun getNewsLetterTypeByLabelIds(labelIds: List<String>): NewsLetterType {
+        labelIds.forEach {
+            if (NewsLetterType.labelIdToNewsLetterMap.containsKey(it)) {
+                return NewsLetterType.labelIdToNewsLetterMap[it]!!
             }
         }
-        return MailType.NOT_NEWS_LETTER
+        error("Not Contains NewsLetter Label Id : $labelIds")
     }
 }
 
 data class NewsLetterMailData(
-    val newsLetterType : MailType,
+    val newsLetterType : NewsLetterType,
     val mailId: String,
     val title: String?,
     val snippet: String?,
